@@ -14,8 +14,8 @@ This project provides a web-based tool to extract and display YouTube video tran
 1.  **Clone the repository:**
 
     ```bash
-    git clone [your_repository_url]
-    cd [your_project_directory]
+    git clone https://github.com/jestie/ytt
+    cd ytt
     ```
 
 2.  **Install dependencies:**
