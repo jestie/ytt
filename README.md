@@ -1,12 +1,13 @@
 # YouTube Transcript Extractor (Community Edition - CE)
 
 This project provides a web-based tool to extract and display YouTube video transcripts. It consists of a Flask backend to fetch transcripts and a simple HTML/JavaScript frontend to interact with the backend.
+It was not intended to be a complete solution yet, but rather a quick way of grabbing the transcripts. 
 
 ## Features
 
 -   Extracts and displays YouTube video transcripts.
 -   Provides a user-friendly web interface.
--   Handles various errors, such as disabled transcripts or unavailable videos.
+-   Handle various errors, such as disabled transcripts or unavailable videos.
 -   Logs errors to a daily rotating file for debugging.
 
 ## Getting Started
@@ -32,6 +33,14 @@ This project provides a web-based tool to extract and display YouTube video tran
 
 4.  **Open in Browser:** Open your web browser and navigate to the URL displayed in the terminal.
 
+## To Do    
+There is a lot to do here. 
+ Menu
+     It does not link or work, but it will in the future. It's a placeholder for now.
+ Edit Funtion
+     A small Edit menu to edit the transcripts will make formatting easier. 
+         Bold, Italic, Font Selection ..etc. 
+ 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues.
