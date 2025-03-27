@@ -1,2 +1,2 @@
 # ytt
-You Tube Transcript extractor. Easy to use. 
+YouTube Transcript extractor. Easy to use. 
