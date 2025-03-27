@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Transcript Extractor</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #topFrame {
+            height: 60px;
+            width: 100%;
+            background-color: #f4f4f4;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #logoContainer {
+            margin-right: 20px;
+        }
+
+        #logo {
+            height: 40px;
+            vertical-align: middle;
+        }
+
+        #content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #leftFrame {
+            width: 180px;
+            background-color: #f9f9f9;
+            border-right: 1px solid #eee;
+            padding: 20px;
+            overflow: auto;
+            resize: horizontal;
+        }
+
+        #mainFrame {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #videoContainer {
+            flex: 1;
+            overflow: hidden;
+            border-right: 1px solid #eee;
+        }
+
+        #transcriptContainer {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: white;
+        }
+
+        #bottomFrame {
+            height: 50px;
+            width: 100%;
+            background-color: #f8f8f8;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 600px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #leftFrame button {
+            width: 100%;
+            margin-bottom: 10px;
+            background-color: #e0e0e0;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            text-align: left; /* Align text to the left */
+        }
+
+        #leftFrame button:hover {
+            background-color: #d0d0d0; /* Lighter background on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="topFrame">
+        <div id="logoContainer">
+            <img id="logo" src="/static/logo.png" alt="Company Logo">
+        </div>
+        <input type="text" id="youtubeUrl" placeholder="Enter YouTube URL">
+        <button onclick="fetchTranscript()">Fetch Transcript</button>
+        <div id="loading"></div>
+    </div>
+
+    <div id="content">
+        <div id="leftFrame">
+            <button onclick="newFunction()">New</button>
+            <button onclick="saveFunction()">Save</button>
+            <button onclick="editFunction()">Edit</button>
+            <button onclick="loginFunction()">Login</button>
+        </div>
+
+        <div id="mainFrame">
+            <div id="videoContainer">
+                <div id="youtubeVideo">Youtube Video</div>
+            </div>
+            <div id="transcriptContainer">
+                <p id="transcript">Transcripts will appear here</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottomFrame">
+        <p>Dev:Jestie <a href="https://github.com/jestie">https://github.com/jestie</a></p>
+    </div>
+
+    <script>
+        function newFunction(){alert("New Function");}
+        function saveFunction(){alert("Save Function");}
+        function editFunction(){alert("Edit Function");}
+        function loginFunction(){alert("Login Function");}
+
+        function fetchTranscript() {
+            const url = document.getElementById('youtubeUrl').value;
+            const videoId = extractVideoId(url);
+
+            if (!videoId) {
+                alert("Invalid YouTube URL");
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'inline-block';
+
+            const videoEmbed = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+            document.getElementById('youtubeVideo').innerHTML = videoEmbed;
+
+            fetch(`/get_transcript?video_id=${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    if (data.error) {
+                        document.getElementById('transcript').innerHTML = `<p>${data.error}</p>`;
+                        return;
+                    }
+
+                    let transcriptHtml = '';
+                    data.transcript.forEach(item => {
+                        const startTime = formatTime(item.start);
+                        transcriptHtml += `<p><b>${startTime}:</b> ${item.text}</p>`;
+                    });
+                    document.getElementById('transcript').innerHTML = transcriptHtml;
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+                    console.error("Error fetching transcript:", error);
+                    document.getElementById('transcript').innerHTML = "<p>Failed to retrieve transcript.</p>";
+                });
+        }
+
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>

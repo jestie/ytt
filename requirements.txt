@@ -1,0 +1,4 @@
+#Lists the Python packages required to run the application.
+#Makes it easy to install dependencies using pip install -r requirements.txt.
+Flask
+youtube-transcript-api
